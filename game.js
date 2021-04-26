@@ -1,15 +1,13 @@
 const square = document.querySelector('.square');
 
-
 const interval = setInterval(() => {
-    const top = Math.floor((Math.random() * 100) + 1);
-    const right = Math.floor((Math.random() * 100) + 1);
-    square.style.top = top + "%";
-    square.style.right = right + "%";
+    const body = document.body;
+    const squareSide = square.offsetHeight;
+    const windowWidth = body.clientWidth;
+    const windowHeight = body.clientHeight;
+    const top = Math.floor((Math.random() * windowHeight) + squareSide);
+    const right = Math.floor((Math.random() * windowWidth) + squareSide);
+    square.style.top = `calc(${top}px - ${squareSide}px)`;
+    square.style.right = `calc(${right}px - ${squareSide}px)`;
     console.log(top, right);
 }, 1000);
-
-
-setTimeout(() => {
-    clearInterval(interval);
-}, 10000);

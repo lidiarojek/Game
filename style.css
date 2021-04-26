@@ -1,5 +1,11 @@
-*{
+* {
     padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    height: 100%;
     margin: 0;
 }
 
@@ -9,4 +15,10 @@
     background-color: darkgoldenrod;
     height: 10vh;
     width: 10vh;
+}
+
+.container {
+    background-color: lightblue;
+    height: 100%;
+    width: 100%;
 }
