@@ -8,17 +8,19 @@ body {
     height: 100%;
     margin: 0;
 }
-
-.square {
-    position: absolute;
-    top: -100%;
-    background-color: darkgoldenrod;
-    height: 10vh;
-    width: 10vh;
-}
-
 .container {
     background-color: lightblue;
-    height: 100%;
-    width: 100%;
+    height: 90vh;
+    width: 90vh;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
+.square {
+    position: absolute;
+    background-color: darkgoldenrod;
+    height: 10%;
+    width: 10%;
+}
+
