@@ -19,8 +19,15 @@ body {
 }
 .square {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: darkgoldenrod;
     height: 10%;
     width: 10%;
 }
 
+
+.count {
+    font-size: 25px;
+}
