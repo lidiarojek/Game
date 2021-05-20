@@ -1,18 +1,15 @@
 const square = document.querySelector('.square');
 const container = document.querySelector('.container');
-
+const minDistance = 20;
 
 
 let counter = 0;
 
 
 const onSquareClick = (event) => {
-    
     event.target.querySelector(".count").innerText = ++counter;
 
-
     moveSquareAfterTimeout();
-
 }
 
 square.addEventListener("click", onSquareClick);
@@ -27,20 +24,31 @@ const moveSquareAfterTimeout = () => {
 
     setRandomSquarePosition(container, square);
     timeout = setTimeout(() => {
-        moveSquareAfterTimeout()        
+        moveSquareAfterTimeout()
     }, 1000);
 }
 
 moveSquareAfterTimeout();
 
 function setRandomSquarePosition(container, square) {
+    const containerRect = container.getBoundingClientRect();
+    const elemRect = square.getBoundingClientRect();
+    const offsetTop = elemRect.top - containerRect.top;
+    const offsetRight = containerRect.right - elemRect.right;
     const squareSide = square.offsetHeight;
     const height = container.clientHeight;
     const width = container.clientWidth;
-    const top = getRandom(squareSide, height);
-    const right = getRandom(squareSide, width);
-    square.style.top = `${top-squareSide}px`; 
-    square.style.right = `${right-squareSide}px`;
+    const topNext = getRandom(squareSide, height) - squareSide;
+    const rightNext = getRandom(squareSide, width) - squareSide;
+
+    if (Math.abs(offsetTop - topNext) < minDistance || Math.abs(offsetRight - rightNext) < minDistance) {
+        setRandomSquarePosition(container, square);
+        return;
+    } else {
+        square.style.top = `${topNext}px`;
+        square.style.right = `${rightNext}px`;
+    }
+
 }
 
 function getRandom(from, to) {
