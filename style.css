@@ -11,7 +11,7 @@ body {
 .container {
     background-color: lightblue;
     height: 90vh;
-    width: 90vh;
+    width: 95vw;
     position: relative;
     top: 50%;
     left: 50%;
@@ -23,8 +23,8 @@ body {
     justify-content: center;
     align-items: center;
     background-color: darkgoldenrod;
-    height: 10%;
-    width: 10%;
+    height: 150px;
+    width: 150px;
 }
 
 
