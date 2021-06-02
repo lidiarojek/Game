@@ -25,7 +25,7 @@ function moveSquareAfterTimeout() {
 
     const { top, left } = getNextRandomPosition(container, square);
 
-    setSquarePosition({top, left, container, square})
+    setSquarePosition({top, left, square})
 
     timeout = setTimeout(() => {
         moveSquareAfterTimeout()
@@ -35,76 +35,60 @@ function moveSquareAfterTimeout() {
 moveSquareAfterTimeout();
 
 function getNextRandomPosition(container, square) {
-
-    const containerRect = container.getBoundingClientRect();
-
-    const squareRect = square.getBoundingClientRect();
-
-    const { width, height } = containerRect;
-
-    const { left, top } = squareRect;
-
-    const topNext = getRandom(-height/2,  height/2);
-    const leftNext = getRandom(-width/2, width/2);
-
     
-    // debugger
-
-    // const elemRect = square.getBoundingClientRect();
-    // const offsetTop = elemRect.top - containerRect.top;
-    // const offsetRight = containerRect.right - elemRect.right;
-    // const squareSide = square.offsetHeight;
-    // const height = container.clientHeight;
-    // const width = container.clientWidth;
-    // const topNext = getRandom(squareSide, height) - squareSide + minDistance;
-    // const rightNext = getRandom(squareSide, width) - squareSide + minDistance;
+    let left = getRandomWithBindSpot(0, container.scrollWidth, square.offsetLeft - minDistance, square.scrollWidth + square.offsetLeft + minDistance);
 
 
-    
+    if (left > container.scrollWidth - square.scrollWidth) {
+        left = container.scrollWidth - square.scrollWidth;
+    }
+
+    if (left < square.scrollWidth) {
+        left = square.scrollWidth;
+    }
+
+
+    let top = getRandomWithBindSpot(0, container.scrollHeight, square.offsetTop - minDistance, square.scrollHeight + square.offsetTop + minDistance);
+
+
+    if (top > container.scrollHeight - square.scrollHeight) {
+        top = container.scrollHeight - square.scrollHeight;
+    }
+
+    if (top < square.scrollHeight) {
+        top = square.scrollHeight;
+    }
+
     return {
-        top: topNext + top + minDistance,
-        left: leftNext + left + minDistance
+        top,
+        left,
     }
 
 }
 
 
-function setSquarePosition({top, left, container, square}) {
-
-    const squareRect = square.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    const { width: sWidth, height: sHeight } = squareRect;
-    const { width: cWidth, height: cHeight } = containerRect;
-
-
-    let nextTop = top;
-    let nextLeft = left;
-
-    if (nextTop < 0) {
-        nextTop = 0;
-    }
-
-    if (nextTop >= cHeight) {
-        nextTop = cHeight - sHeight;
-    }
-
-    if (nextLeft < 0) {
-        nextLeft = 0;
-    }
-
-    if (nextLeft >= cWidth) {
-        nextLeft = cWidth - sWidth;
-    }
-
-
-    square.style.top = `${nextTop}px`;
-    square.style.left = `${nextLeft}px`;
-
-    
-
+function setSquarePosition({top, left, square}) {
+    square.style.top = `${top}px`;
+    square.style.left = `${left}px`;
 }
 
-function getRandom(from, to) {
-    return Math.floor(Math.random() * (to - from + 1) + from);
+function getRandomWithBindSpot(from, to, blindFrom, blindTo) {
+
+    let random = Math.floor(Math.random() * (to - from + 1) + from);
+
+    if (random > blindFrom) {
+        random = random + (blindTo - blindFrom);
+    }
+
+
+    if (random > to) {
+        return to;
+    }
+
+    if (random < from) {
+        return from;
+    }
+
+    return random;
+
 }
