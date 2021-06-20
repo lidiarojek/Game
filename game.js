@@ -1,5 +1,4 @@
-// Your web app's Firebase configuration
-var firebaseConfig = {
+firebase.initializeApp({
     apiKey: "AIzaSyCy48otM_L7syhkwg3hXgVyp830i95P69o",
     authDomain: "game-73643.firebaseapp.com",
     databaseURL: "https://game-73643-default-rtdb.europe-west1.firebasedatabase.app",
@@ -7,30 +6,76 @@ var firebaseConfig = {
     storageBucket: "game-73643.appspot.com",
     messagingSenderId: "100100717887",
     appId: "1:100100717887:web:3f973da66b237cf45c678a"
-  };
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-var database = firebase.database();
+  });
+
+
+const database = firebase.database();
 
 const minDistance = 200;
+let timeout;
+
+const randomGameName = (length = 5) => {
+
+    const array = [];
+    const from = 65;
+    const to = 90;
+    for (let i = 0; i < length; i++) {
+        array.push(Math.floor(Math.random() * (to - from) + from))
+    }
+
+    return array.map(code => String.fromCharCode(code)).join("")
+
+}
+
+const gameName = randomGameName();
+
+document.querySelector("#gameName").innerText = gameName;
+
+const gameRef = firebase.database().ref(gameName);
+
+gameRef.set({
+    player1: {
+        score: 0
+    },
+    player2: {
+        score: 0
+    }
+})
+
+const setPlayerDisplayScore = (player, data) => document.querySelector(`#${player}`).innerText = data[player].score;
+
+gameRef.on('value', (snapshot) => {
+    moveSquareAfterTimeout();
+    setPlayerDisplayScore("player1", snapshot.toJSON());
+    setPlayerDisplayScore("player2", snapshot.toJSON());
+});
+
 
 let counter = 0;
-const updatePlayerResult = () => {
-    firebase.database().ref("players").push().set({
-        "name": player,
-        "game": gameName,
-        "result": counter,
-    });
+const updatePlayerResult = async (player) => {
+
+    const data = (await gameRef.get()).toJSON()
+
+    const score = data[player].score + 1;
+
+    await gameRef.update({
+        [player]: {
+            score
+        }
+    })
+
+
+    return score;
 }
-const onSquareClick = (event) => {
-    event.target.querySelector(".count").innerText = ++counter;
-    updatePlayerResult();
-    moveSquareAfterTimeout();
+
+
+const onSquareClick = async () => {
+    updatePlayerResult("player1");    
 }
 
 document.querySelector('.square').addEventListener("click", onSquareClick);
 
-let timeout;
+
 
 function moveSquareAfterTimeout() {
 
@@ -109,23 +154,4 @@ function getRandomWithBindSpot(from, to, blindFrom, blindTo) {
 
 }
 
-let player = prompt("Type your name");
-let gameName = "1st round";
-
-const setPlayer = () => {
-   
-let players = firebase.database().ref("players").push().set({
-    "name": player,
-    "game": gameName,
-    "result": 5,
-});
-
-var newResult = firebase.database().ref().child('results').push().key;
-
-var updates = {};
-updates['/results/' + newResult] = players;
-return firebase.database().ref().update(updates);
-}
-
-setPlayer();
 
