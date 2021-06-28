@@ -8,6 +8,51 @@ firebase.initializeApp({
     appId: "1:100100717887:web:3f973da66b237cf45c678a"
   });
 
+let currentPlayer = "";
+let gameRef;
+
+document.getElementById("hostButton").onclick = () => {
+    currentPlayer = "player1";
+
+    const gameName = randomGameName();
+
+    document.querySelector("#gameName").innerText = gameName;
+    
+    gameRef = firebase.database().ref(gameName);
+
+
+    gameRef.set({
+        player1: {
+            score: 0
+        },
+        player2: {
+            score: 0
+        }
+    })
+
+    startOnValueChangeLitening(gameRef);
+
+    hideGameControlls();
+}
+
+document.getElementById("guestButton").onclick = () => {    
+    currentPlayer = "player2";
+
+    const gameName = prompt("give me a game name!")
+
+    document.querySelector("#gameName").innerText = gameName;
+    
+    gameRef = firebase.database().ref(gameName);
+    startOnValueChangeLitening(gameRef);
+
+    hideGameControlls();
+}
+
+const hideGameControlls = ()  => {
+    document.querySelector(".game-setup").remove();
+    document.querySelector(".stage-is-hidden").classList.remove("stage-is-hidden")
+}
+
 
 const database = firebase.database();
 
@@ -27,28 +72,21 @@ const randomGameName = (length = 5) => {
 
 }
 
-const gameName = randomGameName();
 
-document.querySelector("#gameName").innerText = gameName;
 
-const gameRef = firebase.database().ref(gameName);
 
-gameRef.set({
-    player1: {
-        score: 0
-    },
-    player2: {
-        score: 0
-    }
-})
 
 const setPlayerDisplayScore = (player, data) => document.querySelector(`#${player}`).innerText = data[player].score;
 
-gameRef.on('value', (snapshot) => {
-    moveSquareAfterTimeout();
-    setPlayerDisplayScore("player1", snapshot.toJSON());
-    setPlayerDisplayScore("player2", snapshot.toJSON());
-});
+
+
+const startOnValueChangeLitening = (ref) => {
+    ref.on('value', (snapshot) => {
+        moveSquareAfterTimeout();
+        setPlayerDisplayScore("player1", snapshot.toJSON());
+        setPlayerDisplayScore("player2", snapshot.toJSON());
+    });
+}
 
 
 let counter = 0;
@@ -70,7 +108,7 @@ const updatePlayerResult = async (player) => {
 
 
 const onSquareClick = async () => {
-    updatePlayerResult("player1");    
+    updatePlayerResult(currentPlayer);    
 }
 
 document.querySelector('.square').addEventListener("click", onSquareClick);
