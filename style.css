@@ -10,8 +10,8 @@ body {
 }
 .container {
     background-color: lightblue;
-    height: 90vh;
-    width: 95vw;
+    height: 600px;
+    width: 800px;
     position: relative;
     top: 50%;
     left: 50%;
@@ -23,13 +23,21 @@ body {
     justify-content: center;
     align-items: center;
     background-color: darkgoldenrod;
-    height: 150px;
-    width: 150px;
+    height: 50px;
+    width: 50px;
 }
 
 
 .count {
     font-size: 25px;
+}
+
+.stage-is-hidden {
+    display: none;
+}
+
+.main-stage {
+    height: 100vh;
 }
 
 .stats {
@@ -50,4 +58,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.game-setup {
+    display: flex;
+    height: 40px;
+    margin: 5px;
+    justify-content: space-evenly;
 }
